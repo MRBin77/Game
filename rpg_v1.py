@@ -9,7 +9,8 @@ Contents
     Packages
         random
     Variables
-        knight (dict): Переменная хранит характеристики рыцаря (strength, health)
+        CONST_HEALTH (str)
+        CONST_STRENGTH (str)
     Functions
         rnd()
         generate_monster()
@@ -26,20 +27,31 @@ Contents
 
 import random
 
-
-knight = {
-    'health': 10,
-    'strength': 10,
-}
+# константы здоровья и силы
+CONST_STRENGTH = 'strength'
+CONST_HEALTH = 'health'
 
 
 def rnd():
     """
     Функция генерирования случайных значений
-    Returns:
-        int: Возвращает случаное значение в диапазоне от 5 до 30
+    Return:
+        return random.randint(5, 30) (int): Возвращает случаное значение в диапазоне от 5 до 30
     """
     return random.randint(5, 30)
+
+
+def get_knight():
+    """
+    Функция создает характеристики рыцаря (strength, health)
+    Return:
+        return status (dict): Возвращает словарь с характеристики рыцаря (strength, health)
+    """
+    status = {
+       'health': 10,
+       'strength': 10,
+    }
+    return status
 
 
 def  generate_monster():
@@ -48,22 +60,22 @@ def  generate_monster():
 
     Returns:
         dict: Возвращает словарь с монстром, с случаныйми значениями в health и strength
-    Examples:
-
     """
     monster = {
         'health': rnd(),
         'strength': rnd(),
     }
-    print(f"Вы встретили чудовище с {monster.get('health')} жизнями и с силой удара {monster.get('strength')}")
+    print(f'Вы встретили чудовище с {monster.get(CONST_HEALTH)} жизнями и с силой удара {monster.get(CONST_STRENGTH)}')
     return monster
 
 
-def apple():
+def apple(knight: dict):
     """
     Функция генерирует яблоко, увеличивающее здоровье (health) рыцарю
+    Parameter:
+        knight (dict): Принимает на вход словарь характеристик рыцаря (health)
     Returns:
-         int: Возвращает значение увеличенного здоровье (health) рыцаря
+        return hp (int): Возвращает значение увеличенного здоровье (health) рыцаря
     Examples:
         >>> apple()
         Вы нашли яблоко увеличивающее здоровье на 5
@@ -71,8 +83,8 @@ def apple():
         Моя сила: 10
     """
     hp = rnd()
-    print(f"Вы нашли яблоко увеличивающее здоровье на {hp}")
-    knight['health'] = knight['health'] + hp
+    print(f'Вы нашли яблоко увеличивающее здоровье на {hp}')
+    knight[CONST_HEALTH] = knight[CONST_HEALTH] + hp
     status_knight(knight)
     return hp
 
@@ -81,31 +93,32 @@ def sword():
     """
     Функция генерирует меч с случайным значением
     Return:
-         int: Возвращает случайное значение
+         return sword (int): Возвращает случайное значение
     Examples:
         >>> sword()
         Вы нашли меч с cилой атаки 23
         23
     """
     sword = rnd()
-    print(f"Вы нашли меч с cилой атаки {sword}")
+    print(f'Вы нашли меч с cилой атаки {sword}')
     return sword
 
 
-def pick_sword(strength: int):
+def pick_sword(strength: int, knight: dict):
     """
     Функция взятия меча. При взятии заменят strength рыцаря, на новое значение
     Parameters:
         strength (int): Принимается новое значение силы(strength) меча
+        knight (dict): Принимает на вход характеристики рыцаря (strength)
     Return:
-        none: Возвращает статус рыцаря из ф-ции status_knight()
+        return status_knight(knight) (none): Возвращает статус рыцаря из ф-ции status_knight()
     Examples:
         >>> pick_sword(sword())
         Вы нашли меч с cилой атаки 27
         Моя жизнь: 10
         Моя сила: 27
     """
-    knight['strength'] = strength
+    knight[CONST_STRENGTH] = strength
     return status_knight(knight)
 
 
@@ -133,12 +146,12 @@ def status_knight(knight: dict):
 
                 1
     """
-    if knight['health'] <= 0:
+    if knight[CONST_HEALTH] <= 0:
         print('Вы мертвы\n')
         return 1
 
     else:
-        print(f"Моя жизнь: {knight['health']}\nМоя сила: {knight['strength']}\n")
+        print(f'Моя жизнь: {knight[CONST_HEALTH]}\nМоя сила: {knight[CONST_STRENGTH]}\n')
         return 0
 
 
@@ -157,11 +170,11 @@ def status_mob(monster: dict):
                 Жизни: 5
                 Силa: 10
     """
-    if monster.get('health') <= 0:
+    if monster.get(CONST_HEALTH) <= 0:
         print('Монстер убит\n')
         return 0
     else:
-        print(f"У чудовища осталось:\n Жизни: {monster['health']}\n Сила: {monster['strength']}\n")
+        print(f"У чудовища осталось:\n Жизни: {monster[CONST_HEALTH]}\n Сила: {monster[CONST_STRENGTH]}\n")
 
 
 def fight(knight: dict, monster: dict):
@@ -177,13 +190,13 @@ def fight(knight: dict, monster: dict):
         return status_mob(monster) (int): Возвращает 0 если монстр мертв
         return fight(knight,monster) (dict): Возвращает рекурсивное значение, если одно из  условий выше не выполнены
     """
-    monster['health'] =  monster.get('health') - knight.get('strength')
-    knight['health'] = knight.get('health') - monster.get('strength')
-    if knight['health'] <= 0:
+    monster[CONST_HEALTH] =  monster.get(CONST_HEALTH) - knight.get(CONST_STRENGTH)
+    knight[CONST_HEALTH] = knight.get(CONST_HEALTH) - monster.get(CONST_STRENGTH)
+    if knight[CONST_HEALTH] <= 0:
         status_mob(monster)
         return status_knight(knight)
 
-    elif monster['health'] <= 0:
+    elif monster[CONST_HEALTH] <= 0:
         status_knight(knight)
         return status_mob(monster)
 
@@ -219,14 +232,14 @@ def check_func_address(func_address):
         return fight(knight,monster) (int): Возвращает значение функции fight,  0 или 1
     """
     if func_address == apple:
-        func_address()
+        func_address(knight)
 
     elif func_address == sword:
         strength_sw = func_address()
         pick = input('Введите 1-взять меч, 2-пойти дальше?: ')
         key = check_key(pick)
         if key == '1':
-            pick_sword(strength_sw)
+            pick_sword(strength_sw, knight)
         else:
             return key
 
@@ -241,9 +254,10 @@ def check_func_address(func_address):
 
 
 if __name__=='__main__':
+    knight = get_knight()
     box = [generate_monster, apple, sword]
-    index = 0
 
+    index = 0
     while index < 10:
 
         rnd_gen = random.choice(box)
@@ -257,7 +271,7 @@ if __name__=='__main__':
 
         if enter == 0:
             index += 1
-            print(f"Число побед: {index}\n")
+            print(f'Число побед: {index}\n')
             continue
 
     else:
