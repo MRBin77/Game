@@ -182,9 +182,11 @@ def fight(knight: dict, monster: dict):
     if knight['health'] <= 0:
         status_mob(monster)
         return status_knight(knight)
+
     elif monster['health'] <= 0:
         status_knight(knight)
         return status_mob(monster)
+
     else:
         return fight(knight,monster)
 
@@ -218,6 +220,7 @@ def check_func_address(func_address):
     """
     if func_address == apple:
         func_address()
+
     elif func_address == sword:
         strength_sw = func_address()
         pick = input('Введите 1-взять меч, 2-пойти дальше?: ')
@@ -226,6 +229,7 @@ def check_func_address(func_address):
             pick_sword(strength_sw)
         else:
             return key
+
     elif func_address == generate_monster:
         monster = func_address()
         action = input('Введите 1-атаковать чудовище, 2-убежать?: ')
